@@ -49,20 +49,6 @@ export default async function handler(req, res) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Claude API Error:', errorText);
-      
-      // טיפול בשגיאות ספציפיות
-      if (response.status === 401) {
-        return res.status(401).json({ 
-          error: 'Invalid Claude API Key' 
-        });
-      }
-      
-      if (response.status === 429) {
-        return res.status(429).json({ 
-          error: 'Rate limit exceeded. Please try again later.' 
-        });
-      }
-      
       return res.status(500).json({ 
         error: 'Failed to get response from Claude API' 
       });

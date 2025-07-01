@@ -1,0 +1,25 @@
+{
+  "name": "truth-dare-game",
+  "version": "1.0.0",
+  "description": "משחק אמת או החדדה עם Claude AI",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "start": "python -m http.server 8000",
+    "serve": "npx http-server"
+  },
+  "keywords": [
+    "game",
+    "truth-or-dare",
+    "claude-ai",
+    "javascript",
+    "html"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "engines": {
+    "node": "18.x"
+  }
+}

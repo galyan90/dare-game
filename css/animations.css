@@ -1,1 +1,574 @@
 
+/* ===== KEYFRAME ANIMATIONS ===== */
+
+/* Gradient Animation for Top Border */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Welcome Emoji Bounce */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-15px);
+    }
+    60% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Spinner Rotation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loading Dots Animation */
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+/* Pulse Animation for Buttons */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(233, 30, 99, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(233, 30, 99, 0);
+    }
+}
+
+/* Fade In Up Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade In Down Animation */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scale In Animation */
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Shake Animation for Errors */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* Celebration Animation */
+@keyframes celebrate {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1) rotate(360deg);
+    }
+}
+
+/* Floating Hearts Animation */
+@keyframes floatHeart {
+    0% {
+        opacity: 0;
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-10vh) translateX(100px) rotate(360deg);
+    }
+}
+
+/* Wiggle Animation */
+@keyframes wiggle {
+    0%, 7% {
+        transform: rotateZ(0);
+    }
+    15% {
+        transform: rotateZ(-15deg);
+    }
+    20% {
+        transform: rotateZ(10deg);
+    }
+    25% {
+        transform: rotateZ(-10deg);
+    }
+    30% {
+        transform: rotateZ(6deg);
+    }
+    35% {
+        transform: rotateZ(-4deg);
+    }
+    40%, 100% {
+        transform: rotateZ(0);
+    }
+}
+
+/* Glow Animation */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px rgba(233, 30, 99, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(233, 30, 99, 0.6), 0 0 30px rgba(233, 30, 99, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(233, 30, 99, 0.2);
+    }
+}
+
+/* Slide In Right Animation */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Slide In Left Animation */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Zoom In Animation */
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Flip Animation */
+@keyframes flip {
+    from {
+        transform: perspective(400px) rotate3d(0, 1, 0, -360deg);
+        animation-timing-function: ease-out;
+    }
+    40% {
+        transform: perspective(400px) translate3d(0, 0, 150px) rotate3d(0, 1, 0, -190deg);
+        animation-timing-function: ease-out;
+    }
+    50% {
+        transform: perspective(400px) translate3d(0, 0, 150px) rotate3d(0, 1, 0, -170deg);
+        animation-timing-function: ease-in;
+    }
+    80% {
+        transform: perspective(400px) scale3d(.95, .95, .95);
+        animation-timing-function: ease-in;
+    }
+    to {
+        transform: perspective(400px);
+        animation-timing-function: ease-in;
+    }
+}
+
+/* ===== ANIMATION CLASSES ===== */
+
+/* Welcome Screen Animations */
+.welcome-emoji {
+    animation: bounce 2s ease-in-out infinite;
+}
+
+/* Button Hover Effects */
+.btn:hover {
+    animation: pulse 1.5s infinite;
+}
+
+.btn:active {
+    animation: none;
+    transform: scale(0.95);
+}
+
+/* Screen Transitions */
+.screen.active {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Loading Animations */
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+.loading-dots span:nth-child(1) {
+    animation: bounce 1.4s ease-in-out infinite both;
+    animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+    animation: bounce 1.4s ease-in-out infinite both;
+    animation-delay: -0.16s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation: bounce 1.4s ease-in-out infinite both;
+}
+
+/* Card Animations */
+.intimacy-card:hover {
+    animation: wiggle 0.8s ease-in-out;
+}
+
+.option-btn:hover {
+    animation: glow 2s ease-in-out infinite;
+}
+
+/* Menu Button Animations */
+.menu-btn {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.menu-btn:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.menu-btn:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+/* Player Card Animations */
+.player-card {
+    animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.player-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.player-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+/* Prompt Card Animation */
+.prompt-card {
+    animation: zoomIn 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Celebration Effects */
+.celebration {
+    animation: celebrate 2s ease-out forwards;
+}
+
+/* Floating Hearts */
+.floating-heart {
+    position: fixed;
+    color: rgba(255, 64, 129, 0.8);
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 1000;
+    animation: floatHeart 4s ease-in-out forwards;
+}
+
+/* Error Shake Animation */
+.shake {
+    animation: shake 0.6s ease-in-out;
+}
+
+/* Success Glow */
+.success-glow {
+    animation: glow 1.5s ease-in-out 3;
+}
+
+/* ===== STAGGERED ANIMATIONS ===== */
+
+/* Options Grid Stagger */
+.options-grid .option-btn {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.options-grid .option-btn:nth-child(1) { animation-delay: 0.1s; }
+.options-grid .option-btn:nth-child(2) { animation-delay: 0.2s; }
+.options-grid .option-btn:nth-child(3) { animation-delay: 0.3s; }
+.options-grid .option-btn:nth-child(4) { animation-delay: 0.4s; }
+
+/* Intimacy Cards Stagger */
+.intimacy-options .intimacy-card {
+    opacity: 0;
+    animation: scaleIn 0.6s ease-out forwards;
+}
+
+.intimacy-options .intimacy-card:nth-child(1) { animation-delay: 0.1s; }
+.intimacy-options .intimacy-card:nth-child(2) { animation-delay: 0.2s; }
+.intimacy-options .intimacy-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* Action Buttons Stagger */
+.action-buttons .btn {
+    opacity: 0;
+    animation: slideInRight 0.5s ease-out forwards;
+}
+
+.action-buttons .btn:nth-child(1) { animation-delay: 0.1s; }
+.action-buttons .btn:nth-child(2) { 
+    animation: slideInLeft 0.5s ease-out forwards;
+    animation-delay: 0.2s; 
+}
+
+/* ===== HOVER MICRO-INTERACTIONS ===== */
+
+/* Button Ripple Effect */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.btn:active::before {
+    width: 200px;
+    height: 200px;
+}
+
+/* Card Lift Effect */
+.intimacy-card,
+.player-card,
+.option-btn {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.intimacy-card:hover,
+.player-card:hover,
+.option-btn:hover {
+    transform: translateY(-5px) scale(1.02);
+}
+
+/* Icon Bounce on Hover */
+.menu-icon,
+.prompt-icon,
+.btn-icon {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-btn:hover .menu-icon,
+.btn:hover .btn-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* ===== ENTRANCE ANIMATIONS ===== */
+
+/* Initial Load Animation */
+.game-container {
+    animation: zoomIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Title Animation */
+.title {
+    opacity: 0;
+    animation: fadeInDown 0.6s ease-out 0.3s forwards;
+}
+
+/* Subtitle Animation */
+.subtitle {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.5s forwards;
+}
+
+/* Input Fields Stagger */
+.input-group {
+    opacity: 0;
+    animation: slideInRight 0.5s ease-out forwards;
+}
+
+.input-group:nth-child(1) { animation-delay: 0.7s; }
+.input-group:nth-child(2) { animation-delay: 0.8s; }
+
+/* ===== SPECIAL EFFECTS ===== */
+
+/* Sparkle Effect for Special Moments */
+@keyframes sparkle {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, #fff 0%, transparent 70%);
+    animation: sparkle 1s ease-in-out forwards;
+}
+
+/* Confetti Animation */
+@keyframes confetti {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #e91e63;
+    animation: confetti 3s linear forwards;
+}
+
+/* ===== REDUCED MOTION PREFERENCES ===== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .welcome-emoji {
+        animation: none;
+    }
+    
+    .btn:hover {
+        animation: none;
+    }
+    
+    .spinner {
+        animation: spin 2s linear infinite;
+    }
+}
+
+/* ===== UTILITY ANIMATION CLASSES ===== */
+
+/* Add these classes via JavaScript for dynamic animations */
+.animate-in {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-out {
+    animation: fadeInDown 0.3s ease-in forwards reverse;
+}
+
+.bounce-in {
+    animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.slide-up {
+    animation: slideInUp 0.4s ease-out forwards;
+}
+
+.slide-down {
+    animation: slideInDown 0.4s ease-out forwards;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

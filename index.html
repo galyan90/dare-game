@@ -3,460 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אמת או החדדה - עם Claude AI</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .game-container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .game-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-        }
-
-        .players-section {
-            margin-bottom: 30px;
-        }
-
-        .players-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        input[type="text"] {
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            min-width: 150px;
-            transition: all 0.3s;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #667eea;
-            transform: scale(1.02);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin: 5px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .players-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .player-tag {
-            background: #f8f9fa;
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: 2px solid #e9ecef;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .remove-player {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .game-section {
-            margin-top: 30px;
-        }
-
-        .current-player {
-            font-size: 1.8rem;
-            color: #667eea;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .choice-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .truth-btn {
-            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-        }
-
-        .dare-btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-        }
-
-        .question-area {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 20px 0;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #e9ecef;
-        }
-
-        .question-text {
-            font-size: 1.2rem;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .loading {
-            color: #667eea;
-            font-style: italic;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .error {
-            color: #ff6b6b;
-            background: #fff5f5;
-            border: 2px solid #fed7d7;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-        }
-
-        @media (max-width: 600px) {
-            .game-container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .choice-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .players-input {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+    <title>משחק האתגרים לזוגות 💕</title>
+    <meta name="description" content="משחק אינטראקטיבי בעברית לזוגות עם שאלות ואתגרים מותאמים אישית">
+    <meta name="keywords" content="זוגות, משחק, אתגרים, שאלות, עברית, רומנטיקה">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💕</text></svg>">
 </head>
 <body>
     <div class="game-container">
-        <h1>🎮 אמת או החדדה</h1>
-        
-        <!-- הוספת שחקנים -->
-        <div class="players-section">
-            <div class="players-input">
-                <input type="text" id="playerName" placeholder="שם השחקן" maxlength="20">
-                <button class="btn" onclick="addPlayer()">הוסף שחקן</button>
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcome-screen">
+            <div class="welcome-emoji">💕</div>
+            <h1 class="title">ברוכים הבאים למשחק הזוגות!</h1>
+            <p class="subtitle">בואו נכיר - איך קוראים לכם?</p>
+            
+            <div class="input-group">
+                <label>השם הראשון</label>
+                <input type="text" id="player1" placeholder="למשל: דנה" autocomplete="given-name">
             </div>
             
-            <div class="players-list" id="playersList"></div>
+            <div class="input-group">
+                <label>השם השני</label>
+                <input type="text" id="player2" placeholder="למשל: אור" autocomplete="given-name">
+            </div>
             
-            <button class="btn" id="startGameBtn" onclick="startGame()" disabled>
-                התחל משחק
+            <button class="btn btn-large" onclick="goToRelationship()">הבא ➡️</button>
+        </div>
+
+        <!-- Relationship Screen -->
+        <div class="screen" id="relationship-screen">
+            <h1 class="title">בואו נכיר אתכם יותר טוב 💫</h1>
+            
+            <div class="section">
+                <h3 class="section-title">כמה זמן אתם ביחד?</h3>
+                <div class="options-grid">
+                    <div class="option-btn" onclick="selectRelationship(this, 'דייטים ראשונים')">
+                        <span class="option-icon">🌱</span>
+                        <span>דייטים ראשונים</span>
+                    </div>
+                    <div class="option-btn" onclick="selectRelationship(this, 'כמה חודשים')">
+                        <span class="option-icon">🌸</span>
+                        <span>כמה חודשים</span>
+                    </div>
+                    <div class="option-btn" onclick="selectRelationship(this, 'יותר מדי זמן')">
+                        <span class="option-icon">🌳</span>
+                        <span>יותר מדי זמן</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3 class="section-title">מה המטרה של הערב?</h3>
+                <div class="options-grid">
+                    <div class="option-btn" onclick="selectGoal(this, 'לשבור את השגרה')">
+                        <span class="option-icon">⚡</span>
+                        <span>לשבור את השגרה</span>
+                    </div>
+                    <div class="option-btn" onclick="selectGoal(this, 'להעמיק קשר')">
+                        <span class="option-icon">💫</span>
+                        <span>להעמיק קשר</span>
+                    </div>
+                    <div class="option-btn" onclick="selectGoal(this, 'להתחמם קצת')">
+                        <span class="option-icon">🔥</span>
+                        <span>להתחמם קצת</span>
+                    </div>
+                    <div class="option-btn" onclick="selectGoal(this, 'רגש')">
+                        <span class="option-icon">💖</span>
+                        <span>רגש</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-large" id="relationship-next" onclick="goToIntimacy()" disabled>הבא ➡️</button>
+        </div>
+
+        <!-- Intimacy Level Screen -->
+        <div class="screen" id="intimacy-screen">
+            <h1 class="title">מה רמת הפתיחות שלכם? 🎯</h1>
+            <p class="subtitle">בחרו את הרמה שהכי מתאימה לכם הערב</p>
+            
+            <div class="intimacy-options">
+                <div class="intimacy-card" onclick="selectIntimacy(this, 'היכרות ראשונית')">
+                    <div class="intimacy-icon">🧊</div>
+                    <h3>היכרות ראשונית</h3>
+                    <p>שאלות נעימות וחמודות להכרות</p>
+                </div>
+                
+                <div class="intimacy-card" onclick="selectIntimacy(this, 'פלפל בינוני')">
+                    <div class="intimacy-icon">🌶️</div>
+                    <h3>פלפל בינוני</h3>
+                    <p>שאלות מעניינות יותר ואתגרים קלים</p>
+                </div>
+                
+                <div class="intimacy-card" onclick="selectIntimacy(this, 'נועזים ופתוחים')">
+                    <div class="intimacy-icon">🔥</div>
+                    <h3>נועזים ופתוחים</h3>
+                    <p>שאלות עמוקות ואתגרים מרגשים</p>
+                </div>
+            </div>
+            
+            <button class="btn btn-large" id="intimacy-next" onclick="goToMenu()" disabled>יאללה בואו נתחיל 💥</button>
+        </div>
+
+        <!-- Game Menu Screen -->
+        <div class="screen" id="menu-screen">
+            <h1 class="title" id="welcome-message">שלום! 👋</h1>
+            <p class="subtitle">בחרו מה הכי מתאים לכם עכשיו</p>
+            
+            <div class="menu-buttons">
+                <button class="menu-btn question-btn" onclick="startPrompt('question')">
+                    <div class="menu-icon">🎲</div>
+                    <div class="menu-text">
+                        <h3>שאלה בבקשה</h3>
+                        <p>שאלות מעניינות ומעמיקות</p>
+                    </div>
+                </button>
+                
+                <button class="menu-btn dare-btn" onclick="startPrompt('dare')">
+                    <div class="menu-icon">🎯</div>
+                    <div class="menu-text">
+                        <h3>אתגר אותי</h3>
+                        <p>משימות מהנות ורומנטיות</p>
+                    </div>
+                </button>
+            </div>
+            
+            <div class="menu-footer">
+                <p class="hint">💡 עצה: השתמשו במקשי 1 ו-2 לבחירה מהירה</p>
+            </div>
+        </div>
+
+        <!-- Player Selection Screen -->
+        <div class="screen" id="player-selection-screen">
+            <h1 class="title">מי מתחיל? 🎯</h1>
+            <p class="subtitle" id="selection-subtitle">בחרו מי יקבל את השאלה/האתגר</p>
+            
+            <div class="player-selection">
+                <div class="player-card" onclick="choosePlayer(1)">
+                    <div class="player-avatar">👤</div>
+                    <h3 id="player1-name-display"></h3>
+                    <p>לחץ כאן לבחירה</p>
+                </div>
+                
+                <div class="vs-divider">VS</div>
+                
+                <div class="player-card" onclick="choosePlayer(2)">
+                    <div class="player-avatar">👤</div>
+                    <h3 id="player2-name-display"></h3>
+                    <p>לחץ כאן לבחירה</p>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary random-btn" onclick="randomPlayer()">
+                <span class="btn-icon">🎲</span>
+                <span>בחירה אקראית</span>
             </button>
         </div>
 
-        <!-- המשחק -->
-        <div class="game-section hidden" id="gameSection">
-            <div class="current-player" id="currentPlayer"></div>
-            
-            <div class="choice-buttons">
-                <button class="btn truth-btn" onclick="getQuestion('truth')">
-                    🤔 אמת
-                </button>
-                <button class="btn dare-btn" onclick="getQuestion('dare')">
-                    💥 החדדה
-                </button>
+        <!-- Prompt Screen -->
+        <div class="screen" id="prompt-screen">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p class="loading-text">מכין שאלה מיוחדת עבורכם...</p>
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
             
-            <div class="question-area" id="questionArea">
-                <div class="question-text">בחר אמת או החדדה!</div>
+            <div id="prompt-content" style="display: none;">
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-icon" id="prompt-icon">🎲</span>
+                        <span class="prompt-type" id="prompt-type">שאלה</span>
+                    </div>
+                    
+                    <div class="prompt-text" id="prompt-text"></div>
+                    
+                    <div class="prompt-footer">
+                        <div class="prompt-player" id="prompt-player"></div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="finishRound()">
+                        <span class="btn-icon">✅</span>
+                        <span>סיימנו</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="nextPlayer()" id="next-player-btn">
+                        <span class="btn-icon">🔁</span>
+                        <span>תור השני</span>
+                    </button>
+                </div>
+                
+                <div class="secondary-actions">
+                    <button class="btn btn-ghost" onclick="backToMenu()">
+                        <span class="btn-icon">🏠</span>
+                        <span>חזרה לתפריט</span>
+                    </button>
+                </div>
             </div>
-            
-            <button class="btn" onclick="nextPlayer()" id="nextBtn" disabled>
-                השחקן הבא
-            </button>
-            
-            <button class="btn" onclick="resetGame()" style="margin-top: 20px;">
-                משחק חדש
-            </button>
         </div>
+
+        <!-- Background Elements -->
+        <div class="background-hearts" id="background-hearts"></div>
+        <div class="celebration-container" id="celebration-container"></div>
     </div>
 
-    <script>
-        let players = [];
-        let currentPlayerIndex = 0;
-        let gameStarted = false;
-
-        // הוספת שחקן
-        function addPlayer() {
-            const input = document.getElementById('playerName');
-            const name = input.value.trim();
-            
-            if (name && !players.includes(name)) {
-                players.push(name);
-                input.value = '';
-                updatePlayersList();
-                updateStartButton();
-            }
-        }
-
-        // עדכון רשימת השחקנים
-        function updatePlayersList() {
-            const list = document.getElementById('playersList');
-            list.innerHTML = players.map((player, index) => `
-                <div class="player-tag">
-                    ${player}
-                    <button class="remove-player" onclick="removePlayer(${index})">✕</button>
-                </div>
-            `).join('');
-        }
-
-        // הסרת שחקן
-        function removePlayer(index) {
-            players.splice(index, 1);
-            updatePlayersList();
-            updateStartButton();
-        }
-
-        // עדכון כפתור התחלת המשחק
-        function updateStartButton() {
-            const btn = document.getElementById('startGameBtn');
-            btn.disabled = players.length < 2;
-        }
-
-        // התחלת המשחק
-        function startGame() {
-            if (players.length >= 2) {
-                gameStarted = true;
-                currentPlayerIndex = 0;
-                document.querySelector('.players-section').classList.add('hidden');
-                document.getElementById('gameSection').classList.remove('hidden');
-                updateCurrentPlayer();
-            }
-        }
-
-        // עדכון השחקן הנוכחי
-        function updateCurrentPlayer() {
-            document.getElementById('currentPlayer').textContent = 
-                `תור של: ${players[currentPlayerIndex]}`;
-        }
-
-        // קבלת שאלה מ-Claude
-        async function getQuestion(type) {
-            const questionArea = document.getElementById('questionArea');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            // הצגת טעינה
-            questionArea.innerHTML = '<div class="question-text loading">Claude חושב על שאלה...</div>';
-            nextBtn.disabled = true;
-
-            try {
-                const prompts = {
-                    truth: `צור שאלה מעניינת ומתאימה למשחק "אמת או החדדה" לקטגוריית "אמת". השאלה צריכה להיות:
-- מתאימה לכל הגילאים
-- מעניינת ומגרה סקרנות
-- לא פוגענית או מביכה מדי
-- בעברית
-תחזיר רק את השאלה, בלי הסברים נוספים.`,
-                    
-                    dare: `צור אתגר מעניין ומתאים למשחק "אמת או החדדה" לקטגוריית "החדדה". האתגר צריך להיות:
-- מתאים לכל הגילאים
-- בטוח לביצוע
-- מעניין וכיפי
-- לא מביך מדי או פוגעני
-- בעברית
-תחזיר רק את האתגר, בלי הסברים נוספים.`
-                };
-
-                const response = await fetch('/api/claude', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        prompt: prompts[type]
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                // הצגת התשובה
-                const icon = type === 'truth' ? '🤔' : '💥';
-                questionArea.innerHTML = `
-                    <div class="question-text">
-                        ${icon} ${data.response}
-                    </div>
-                `;
-                
-                nextBtn.disabled = false;
-
-            } catch (error) {
-                console.error('Error:', error);
-                
-                // שאלות גיבוי במקרה של שגיאה
-                const backupQuestions = {
-                    truth: [
-                        "מה הדבר הכי מביך שקרה לך השנה?",
-                        "איך היית רוצה להיקרא אם היית נולד במין השני?",
-                        "מה החלום הכי מוזר שחלמת?",
-                        "מה הסוד שאף פעם לא סיפרת לאף אחד?",
-                        "מי האדם שהכי מעצבן אותך?"
-                    ],
-                    dare: [
-                        "רקוד במשך דקה בלי מוזיקה",
-                        "דמה חיה במשך 30 שניות",
-                        "שר שיר בקול רם",
-                        "עשה פרצוף מצחיק למשך דקה",
-                        "ספר בדיחה (טובה או רעה)"
-                    ]
-                };
-
-                const backupList = backupQuestions[type];
-                const randomQuestion = backupList[Math.floor(Math.random() * backupList.length)];
-                const icon = type === 'truth' ? '🤔' : '💥';
-                
-                questionArea.innerHTML = `
-                    <div class="question-text">
-                        ${icon} ${randomQuestion}
-                    </div>
-                    <div class="error" style="margin-top: 15px; font-size: 0.9rem;">
-                        שגיאה בחיבור ל-Claude AI. משתמש בשאלה מקומית.
-                    </div>
-                `;
-                
-                nextBtn.disabled = false;
-            }
-        }
-
-        // שחקן הבא
-        function nextPlayer() {
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-            updateCurrentPlayer();
-            
-            // איפוס השאלה
-            document.getElementById('questionArea').innerHTML = 
-                '<div class="question-text">בחר אמת או החדדה!</div>';
-            document.getElementById('nextBtn').disabled = true;
-        }
-
-        // איפוס המשחק
-        function resetGame() {
-            players = [];
-            currentPlayerIndex = 0;
-            gameStarted = false;
-            
-            document.querySelector('.players-section').classList.remove('hidden');
-            document.getElementById('gameSection').classList.add('hidden');
-            document.getElementById('playerName').value = '';
-            
-            updatePlayersList();
-            updateStartButton();
-        }
-
-        // Enter key support
-        document.getElementById('playerName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addPlayer();
-            }
-        });
-
-        // בדיקת חיבור לשרת
-        window.addEventListener('load', function() {
-            fetch('/api/claude', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    prompt: 'test'
-                })
-            }).catch(error => {
-                console.log('Claude API not available, using backup questions');
-            });
-        });
-    </script>
+    <!-- Scripts -->
+    <script src="js/gameData.js"></script>
+    <script src="js/gameLogic.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>

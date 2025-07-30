@@ -1,13 +1,14 @@
 {
   "version": 2,
   "name": "couple-challenge-game",
+  "outputDirectory": ".",
   "builds": [
     {
       "src": "index.html",
       "use": "@vercel/static"
     },
     {
-      "src": "api/claude.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     }
   ],
@@ -16,6 +17,14 @@
       "src": "/api/claude",
       "dest": "/api/claude.js",
       "methods": ["POST", "OPTIONS"]
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/js/$1"
     },
     {
       "src": "/(.*)",

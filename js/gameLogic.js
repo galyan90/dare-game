@@ -1,88 +1,57 @@
-
-// ===== GEMINI API FUNCTIONS =====
+// ===== API FUNCTIONS =====
 
 /**
- * Call Gemini API to generate content
+ * Call local Gemini API endpoint
  */
-async function callGeminiAPI(prompt) {
-    if (!validateApiKey()) {
-        throw new Error('API key not configured');
-    }
-
-    const url = `${GEMINI_CONFIG.baseURL}/models/${GEMINI_CONFIG.model}:generateContent?key=${GEMINI_CONFIG.apiKey}`;
-    
-    const requestBody = {
-        contents: [{
-            parts: [{
-                text: prompt
-            }]
-        }],
-        generationConfig: {
-            temperature: GEMINI_CONFIG.temperature,
-            topK: GEMINI_CONFIG.topK,
-            topP: GEMINI_CONFIG.topP,
-            maxOutputTokens: GEMINI_CONFIG.maxTokens,
-        },
-        safetySettings: [
-            {
-                category: "HARM_CATEGORY_HARASSMENT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE"
-            },
-            {
-                category: "HARM_CATEGORY_HATE_SPEECH",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE"
-            },
-            {
-                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE"
-            },
-            {
-                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE"
-            }
-        ]
-    };
-
+async function callLocalGeminiAPI(prompt, gameContext) {
     try {
-        const response = await fetch(url, {
+        const response = await fetch('/api/claude', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify({
+                prompt: prompt,
+                gameContext: gameContext
+            })
         });
 
-        if (!response.ok) {
-            if (response.status === 429) {
-                throw new Error('rate_limit');
-            } else if (response.status >= 500) {
-                throw new Error('api_error');
-            } else {
-                throw new Error('network_error');
-            }
-        }
-
         const data = await response.json();
-        
-        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-            throw new Error('invalid_response');
+
+        if (!response.ok) {
+            // Handle specific error types from the API
+            throw new Error(data.error || 'api_error');
         }
 
-        const generatedText = data.candidates[0].content.parts[0].text;
-        return generatedText.trim();
+        return data.response;
 
     } catch (error) {
-        console.error('Gemini API Error:', error);
+        console.error('Local API Error:', error);
         
-        if (error.message === 'rate_limit' || 
-            error.message === 'api_error' || 
-            error.message === 'network_error' || 
-            error.message === 'invalid_response') {
-            throw error;
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            throw new Error('network_error');
         }
         
-        throw new Error('general_error');
+        throw error;
     }
+}
+
+/**
+ * Build game context for API call
+ */
+function buildGameContext(targetPlayer, promptType) {
+    return {
+        player1: gameData.player1,
+        player2: gameData.player2,
+        relationship: gameData.relationship,
+        goal: gameData.goal,
+        intimacy: gameData.intimacy,
+        currentPlayer: targetPlayer,
+        promptType: promptType,
+        usedPrompts: gameData.usedPrompts.slice(-5), // Last 5 prompts only
+        sessionId: gameData.sessionId,
+        timestamp: new Date().toISOString()
+    };
 }
 
 /**
@@ -92,56 +61,46 @@ function buildGeminiPrompt(type, targetPlayer) {
     const playerName = targetPlayer === 1 ? gameData.player1 : gameData.player2;
     const otherPlayerName = targetPlayer === 1 ? gameData.player2 : gameData.player1;
     
-    // Get context strings
-    const relationshipContext = CONTEXT_BUILDERS.relationship[gameData.relationship] || '';
-    const goalContext = CONTEXT_BUILDERS.goal[gameData.goal] || '';
-    const intimacyContext = PROMPT_TEMPLATES[type].intimacyLevels[gameData.intimacy] || '';
+    let prompt = '';
     
-    // Build the prompt
-    let prompt = PROMPT_TEMPLATES.system + '\n\n';
-    
-    prompt += PROMPT_TEMPLATES[type].base
-        .replace('{relationship_context}', relationshipContext)
-        .replace('{target_player}', playerName)
-        .replace('{intimacy_level}', intimacyContext)
-        .replace('{evening_goal}', goalContext);
-    
-    // Add specific context based on type
     if (type === 'question') {
-        prompt += `\n\nהשאלה צריכה להיות מופנית ישירות ל${playerName} ולעזור ל${otherPlayerName} להכיר אותו/אותה טוב יותר.`;
+        prompt = `צור שאלה מעניינת ואישית עבור ${playerName}.`;
+        
+        // Add specific context based on intimacy level
+        if (gameData.intimacy === 'היכרות ראשונית') {
+            prompt += ' השאלה צריכה להיות נעימה ומתאימה להכרות ראשונית.';
+        } else if (gameData.intimacy === 'פלפל בינוני') {
+            prompt += ' השאלה יכולה להיות קצת יותר אישית, אבל עדיין נוחה.';
+        } else if (gameData.intimacy === 'נועזים ופתוחים') {
+            prompt += ' השאלה יכולה להיות עמוקה ואישית יותר.';
+        }
+        
     } else if (type === 'dare') {
-        prompt += `\n\nהאתגר צריך להיות משהו ש${playerName} יכול לעשות עכשיו, במקום, ושיהיה מהנה לשניהם.`;
-    }
-    
-    // Add history context to avoid repetition
-    if (gameData.usedPrompts.length > 0) {
-        prompt += '\n\nאל תחזור על השאלות/אתגרים הבאים:\n';
-        prompt += gameData.usedPrompts.slice(-5).map(p => `- ${p}`).join('\n');
-    }
-    
-    // Add goal-specific instructions
-    if (gameData.goal === 'לשבור את השגרה') {
-        prompt += '\n\nהיה יצירתי ומפתיע!';
-    } else if (gameData.goal === 'להעמיק קשר') {
-        prompt += '\n\nמטרת השאלה היא ליצור חיבור עמוק יותר.';
-    } else if (gameData.goal === 'להתחמם קצת') {
-        prompt += '\n\nהשאלה צריכה להיות רומנטית ומחממת.';
-    } else if (gameData.goal === 'רגש') {
-        prompt += '\n\nהשאלה צריכה לעורר רגשות ולהיות משמעותית.';
+        prompt = `צור אתגר או משימה מהנה ש${playerName} יכול לעשות עכשיו.`;
+        
+        // Add specific context based on intimacy level
+        if (gameData.intimacy === 'היכרות ראשונית') {
+            prompt += ' האתגר צריך להיות פשוט, חמוד ומתאים לדייטים ראשונים.';
+        } else if (gameData.intimacy === 'פלפל בינוני') {
+            prompt += ' האתגר יכול להיות קצת יותר אינטימי, אבל עדיין נוח.';
+        } else if (gameData.intimacy === 'נועזים ופתוחים') {
+            prompt += ' האתגר יכול להיות רומנטי ואינטימי יותר.';
+        }
     }
     
     return prompt;
 }
 
 /**
- * Generate prompt using Gemini API or fallback
+ * Generate prompt using API or fallback
  */
-async function generatePromptWithGemini(type, targetPlayer) {
+async function generatePromptWithAPI(type, targetPlayer) {
     const cacheKey = getCacheKey(type, targetPlayer, gameData.intimacy, gameData.relationship, gameData.goal);
     
     // Check cache first
     if (shouldUseCache(cacheKey)) {
         const cached = gameData.promptCache.get(cacheKey);
+        console.log('Using cached prompt');
         return cached.prompt;
     }
     
@@ -151,9 +110,12 @@ async function generatePromptWithGemini(type, targetPlayer) {
             throw new Error('Invalid game data');
         }
         
-        // Build and send prompt to Gemini
+        // Build prompt and context
         const prompt = buildGeminiPrompt(type, targetPlayer);
-        const generatedContent = await callGeminiAPI(prompt);
+        const gameContext = buildGameContext(targetPlayer, type);
+        
+        // Call API
+        const generatedContent = await callLocalGeminiAPI(prompt, gameContext);
         
         // Validate response
         if (!generatedContent || generatedContent.length < 10) {
@@ -162,9 +124,11 @@ async function generatePromptWithGemini(type, targetPlayer) {
         
         // Check if we already used this prompt
         if (isPromptUsed(generatedContent)) {
+            console.log('Prompt already used, trying again...');
+            
             // Try one more time with additional context
-            const retryPrompt = prompt + '\n\nתן לי משהו אחר לגמרי, יצירתי ושונה.';
-            const retryContent = await callGeminiAPI(retryPrompt);
+            const retryPrompt = prompt + ' תן לי משהו אחר לגמרי, יצירתי ושונה מהקודם.';
+            const retryContent = await callLocalGeminiAPI(retryPrompt, gameContext);
             
             if (retryContent && retryContent.length >= 10 && !isPromptUsed(retryContent)) {
                 addToCache(cacheKey, retryContent);
@@ -179,7 +143,17 @@ async function generatePromptWithGemini(type, targetPlayer) {
         return generatedContent;
         
     } catch (error) {
-        console.warn('Falling back to local content:', error.message);
+        console.warn('API failed, falling back to local content:', error.message);
+        
+        // Show appropriate error message
+        if (error.message === 'rate_limit') {
+            showError('יותר מדי בקשות. חכו רגע ונסו שוב!');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        } else if (error.message === 'network_error') {
+            showError('בעיה בחיבור. בואו ננסה עם שאלה מקומית.');
+        } else if (error.message === 'api_key_invalid') {
+            showError('בעיה בהגדרות API. עובר לשאלות מקומיות.');
+        }
         
         // Fallback to local content
         return getFallbackPrompt(type, gameData.intimacy);
@@ -198,6 +172,7 @@ function getFallbackPrompt(type, intimacyLevel) {
         selectedPrompt = availablePrompts[Math.floor(Math.random() * availablePrompts.length)];
     } else {
         // If all prompts used, reset history and pick randomly
+        console.log('All prompts used, resetting history');
         gameData.usedPrompts = [];
         selectedPrompt = prompts[Math.floor(Math.random() * prompts.length)];
     }
@@ -404,12 +379,12 @@ async function generateAndShowPrompt() {
     
     try {
         // Generate prompt with random delay for suspense
-        const minDelay = 2000;
-        const maxDelay = 4000;
+        const minDelay = 1500;
+        const maxDelay = 3000;
         const delay = Math.random() * (maxDelay - minDelay) + minDelay;
         
         const [prompt] = await Promise.all([
-            generatePromptWithGemini(gameData.currentType, gameData.currentPlayer),
+            generatePromptWithAPI(gameData.currentType, gameData.currentPlayer),
             new Promise(resolve => setTimeout(resolve, delay))
         ]);
         
@@ -458,7 +433,9 @@ function displayPrompt(prompt) {
     
     // Update next player button
     const nextBtn = document.getElementById('next-player-btn');
-    nextBtn.innerHTML = `<span class="btn-icon">🔁</span><span>תור ${otherPlayerName}</span>`;
+    if (nextBtn) {
+        nextBtn.innerHTML = `<span class="btn-icon">🔁</span><span>תור ${otherPlayerName}</span>`;
+    }
     
     // Hide loading and show content
     document.getElementById('loading').classList.remove('active');
@@ -528,6 +505,7 @@ function showError(message) {
         text-align: center;
         box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
         animation: slideInDown 0.3s ease-out;
+        max-width: 90%;
     `;
     errorDiv.textContent = message;
     document.body.appendChild(errorDiv);
@@ -556,74 +534,3 @@ function showMessage(text) {
         font-weight: bold;
         z-index: 2000;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(233, 30, 99, 0.4);
-        animation: zoomIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    `;
-    messageDiv.textContent = text;
-    document.body.appendChild(messageDiv);
-    
-    setTimeout(() => {
-        messageDiv.style.animation = 'zoomIn 0.3s ease-in forwards reverse';
-        setTimeout(() => messageDiv.remove(), 300);
-    }, 2000);
-}
-
-/**
- * Show celebration effect
- */
-function showCelebration(emoji) {
-    const celebration = document.createElement('div');
-    celebration.className = 'celebration';
-    celebration.textContent = emoji;
-    celebration.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        font-size: 100px;
-        z-index: 1500;
-        pointer-events: none;
-        user-select: none;
-    `;
-    
-    document.body.appendChild(celebration);
-    
-    setTimeout(() => {
-        celebration.remove();
-    }, 2000);
-}
-
-/**
- * Create floating hearts effect
- */
-function createFloatingHearts() {
-    const heartsContainer = document.getElementById('background-hearts');
-    
-    for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.textContent = ['💖', '💕', '💗', '💘'][Math.floor(Math.random() * 4)];
-            heart.style.left = Math.random() * 100 + '%';
-            heart.style.animationDelay = Math.random() * 2 + 's';
-            heartsContainer.appendChild(heart);
-            
-            setTimeout(() => {
-                heart.remove();
-            }, 4000);
-        }, i * 800);
-    }
-}
-
-// ===== EXPORT FUNCTIONS FOR GLOBAL ACCESS =====
-window.goToRelationship = goToRelationship;
-window.selectRelationship = selectRelationship;
-window.selectGoal = selectGoal;
-window.goToIntimacy = goToIntimacy;
-window.selectIntimacy = selectIntimacy;
-window.goToMenu = goToMenu;
-window.startPrompt = startPrompt;
-window.choosePlayer = choosePlayer;
-window.randomPlayer = randomPlayer;
-window.nextPlayer = nextPlayer;
-window.finishRound = finishRound;
-window.backToMenu = backToMenu;

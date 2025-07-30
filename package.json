@@ -1,25 +1,46 @@
 {
-  "name": "truth-dare-game",
-  "version": "1.0.0",
-  "description": "משחק אמת או החדדה עם Claude AI",
+  "name": "couple-challenge-game",
+  "version": "2.0.0",
+  "description": "משחק אתגרים אינטראקטיבי לזוגות בעברית עם Gemini AI",
   "main": "index.html",
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo 'No build step required'",
-    "start": "python -m http.server 8000",
-    "serve": "npx http-server"
+    "build": "echo 'Static HTML - no build needed'",
+    "start": "vercel dev",
+    "deploy": "vercel --prod",
+    "test": "echo 'Testing game functionality...' && node test/basic-test.js"
   },
   "keywords": [
-    "game",
-    "truth-or-dare",
-    "claude-ai",
-    "javascript",
-    "html"
+    "couples",
+    "game", 
+    "hebrew",
+    "interactive",
+    "relationship",
+    "gemini-ai",
+    "vercel",
+    "romance",
+    "questions",
+    "challenges"
   ],
   "author": "Your Name",
   "license": "MIT",
-  "dependencies": {},
   "engines": {
-    "node": "18.x"
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/couple-challenge-game.git"
+  },
+  "homepage": "https://your-game-url.vercel.app",
+  "vercel": {
+    "functions": {
+      "api/claude.js": {
+        "maxDuration": 30
+      }
+    }
   }
 }

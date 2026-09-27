@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeGame();
     setupEventListeners();
     setupKeyboardShortcuts();
-    checkAPIConfiguration();
     
     console.log('✅ המשחק מוכן לשימוש!');
 });
@@ -47,7 +46,6 @@ function resetGameData() {
     gameData.currentPlayer = 0;
     gameData.usedPrompts = [];
     gameData.gameStarted = false;
-    gameData.promptCache.clear();
     
     console.log('🔄 נתוני המשחק אופסו');
 }
@@ -279,34 +277,6 @@ function handlePromptKeyboard(e) {
             e.preventDefault();
             backToMenu();
             break;
-    }
-}
-
-/**
- * Check API configuration on startup
- */
-function checkAPIConfiguration() {
-    if (!validateApiKey()) {
-        console.warn('⚠️ מפתח Gemini API לא הוגדר - המשחק יעבוד עם שאלות מקומיות');
-        showApiWarning();
-    } else {
-        console.log('✅ Gemini API מוגדר');
-        testApiConnection();
-    }
-}
-
-/**
- * Test API connection
- */
-async function testApiConnection() {
-    try {
-        // Simple test call to verify API is working
-        const testPrompt = 'אמר שלום בעברית';
-        await callGeminiAPI(testPrompt);
-        console.log('✅ חיבור ל-Gemini API עובד');
-    } catch (error) {
-        console.warn('⚠️ בעיה בחיבור ל-Gemini API:', error.message);
-        showApiError(error.message);
     }
 }
 
@@ -591,45 +561,6 @@ function createRippleEffect(e) {
     setTimeout(() => {
         ripple.remove();
     }, 600);
-}
-
-/**
- * Show API warning
- */
-function showApiWarning() {
-    const warning = document.createElement('div');
-    warning.style.cssText = `
-        position: fixed;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: linear-gradient(135deg, #ff9800, #ffb74d);
-        color: white;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: bold;
-        z-index: 3000;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-    `;
-    warning.innerHTML = `
-        ⚠️ Gemini API לא מוגדר<br>
-        <small>המשחק יעבוד עם שאלות מקומיות</small>
-    `;
-    document.body.appendChild(warning);
-    
-    setTimeout(() => {
-        warning.remove();
-    }, 5000);
-}
-
-/**
- * Show API error
- */
-function showApiError(errorType) {
-    console.warn(`API Error: ${errorType}`);
-    // Could show specific error messages based on error type
 }
 
 /**

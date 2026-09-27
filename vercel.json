@@ -1,36 +1,5 @@
 {
-  "version": 2,
-  "name": "couple-challenge-game",
   "outputDirectory": ".",
-  "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/claude",
-      "dest": "/api/claude.js",
-      "methods": ["POST", "OPTIONS"]
-    },
-    {
-      "src": "/css/(.*)",
-      "dest": "/css/$1"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/js/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
   "functions": {
     "api/claude.js": {
       "maxDuration": 30
@@ -45,7 +14,7 @@
           "value": "*"
         },
         {
-          "key": "Access-Control-Allow-Methods", 
+          "key": "Access-Control-Allow-Methods",
           "value": "GET, POST, OPTIONS"
         },
         {

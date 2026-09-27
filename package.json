@@ -8,11 +8,11 @@
     "build": "echo 'Static HTML - no build needed'",
     "start": "vercel dev",
     "deploy": "vercel --prod",
-    "test": "echo 'Testing game functionality...' && node test/basic-test.js"
+    "test": "node test/basic-test.js"
   },
   "keywords": [
     "couples",
-    "game", 
+    "game",
     "hebrew",
     "interactive",
     "relationship",
@@ -22,7 +22,7 @@
     "questions",
     "challenges"
   ],
-  "author": "Your Name",
+  "author": "galyan90",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
@@ -33,14 +33,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/couple-challenge-game.git"
-  },
-  "homepage": "https://your-game-url.vercel.app",
-  "vercel": {
-    "functions": {
-      "api/claude.js": {
-        "maxDuration": 30
-      }
-    }
+    "url": "https://github.com/galyan90/dare-game.git"
   }
 }

@@ -1,13 +1,5 @@
-// ===== GEMINI API CONFIGURATION =====
-const GEMINI_CONFIG = {
-    apiKey: 'YOUR_GEMINI_API_KEY_HERE', // החלף עם המפתח שלך
-    baseURL: 'https://generativelanguage.googleapis.com/v1beta',
-    model: 'gemini-pro',
-    temperature: 0.9,
-    maxTokens: 200,
-    topP: 0.95,
-    topK: 40
-};
+// Gemini is called only through /api/claude. The API key lives in the server
+// environment (GEMINI_API_KEY in Vercel) and must never be put in this file.
 
 // ===== GAME STATE =====
 let gameData = {
@@ -19,8 +11,7 @@ let gameData = {
     currentType: '',
     currentPlayer: 0,
     usedPrompts: [],
-    gameStarted: false,
-    promptCache: new Map() // Cache for API responses
+    gameStarted: false
 };
 
 // ===== PROMPT TEMPLATES FOR GEMINI =====
@@ -159,34 +150,6 @@ function getRandomLoadingMessage() {
     return LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
 }
 
-function getCacheKey(type, player, intimacy, relationship, goal) {
-    return `${type}_${player}_${intimacy}_${relationship}_${goal}`;
-}
-
-function shouldUseCache(cacheKey) {
-    const cached = gameData.promptCache.get(cacheKey);
-    if (!cached) return false;
-    
-    const now = Date.now();
-    const cacheAge = now - cached.timestamp;
-    const maxAge = 30 * 60 * 1000; // 30 minutes
-    
-    return cacheAge < maxAge;
-}
-
-function addToCache(cacheKey, prompt) {
-    gameData.promptCache.set(cacheKey, {
-        prompt: prompt,
-        timestamp: Date.now()
-    });
-    
-    // Limit cache size to 50 entries
-    if (gameData.promptCache.size > 50) {
-        const firstKey = gameData.promptCache.keys().next().value;
-        gameData.promptCache.delete(firstKey);
-    }
-}
-
 // ===== PROMPT HISTORY MANAGEMENT =====
 function addToHistory(prompt) {
     gameData.usedPrompts.push(prompt);
@@ -202,10 +165,6 @@ function isPromptUsed(prompt) {
 }
 
 // ===== VALIDATION FUNCTIONS =====
-function validateApiKey() {
-    return GEMINI_CONFIG.apiKey && GEMINI_CONFIG.apiKey !== 'YOUR_GEMINI_API_KEY_HERE';
-}
-
 function validateGameData() {
     return gameData.player1 && 
            gameData.player2 && 
@@ -216,7 +175,6 @@ function validateGameData() {
 
 // ===== EXPORT FOR GLOBAL ACCESS =====
 window.gameData = gameData;
-window.GEMINI_CONFIG = GEMINI_CONFIG;
 window.PROMPT_TEMPLATES = PROMPT_TEMPLATES;
 window.CONTEXT_BUILDERS = CONTEXT_BUILDERS;
 window.FALLBACK_CONTENT = FALLBACK_CONTENT;
@@ -224,10 +182,6 @@ window.ERROR_MESSAGES = ERROR_MESSAGES;
 
 // Export utility functions
 window.getRandomLoadingMessage = getRandomLoadingMessage;
-window.getCacheKey = getCacheKey;
-window.shouldUseCache = shouldUseCache;
-window.addToCache = addToCache;
 window.addToHistory = addToHistory;
 window.isPromptUsed = isPromptUsed;
-window.validateApiKey = validateApiKey;
 window.validateGameData = validateGameData;

@@ -34,12 +34,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/galyan90/dare-game.git"
-  },
-  "vercel": {
-    "functions": {
-      "api/claude.js": {
-        "maxDuration": 30
-      }
-    }
   }
 }

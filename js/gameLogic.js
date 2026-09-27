@@ -77,15 +77,6 @@ async function callLocalGeminiAPI(prompt, gameContext, retryCount = 0) {
  * Generate prompt using API with aggressive retry and fallback only as last resort
  */
 async function generatePromptWithAPI(type, targetPlayer) {
-    const cacheKey = getCacheKey(type, targetPlayer, gameData.intimacy, gameData.relationship, gameData.goal);
-    
-    // Check cache first
-    if (shouldUseCache(cacheKey)) {
-        const cached = gameData.promptCache.get(cacheKey);
-        console.log('📦 Using cached prompt');
-        return cached.prompt;
-    }
-    
     // Validate game data
     if (!validateGameData()) {
         throw new Error('Invalid game data');
@@ -121,9 +112,8 @@ async function generatePromptWithAPI(type, targetPlayer) {
                 continue;
             }
             
-            // Success! Cache and return
+            // Success!
             console.log('🎉 Successfully generated unique prompt via API');
-            addToCache(cacheKey, generatedContent);
             addToHistory(generatedContent);
             return generatedContent;
             
@@ -353,14 +343,12 @@ async function generateAndShowPrompt() {
         // Ask user if they want to try again or use fallback
         setTimeout(async () => {
             try {
-                const useAPI = await askUserForFallback(error.message);
-                if (useAPI) {
-                    // User wants to try API again
-                    generateAndShowPrompt();
-                } else {
-                    // User chose fallback
+                const useFallback = await askUserForFallback(error.message);
+                if (useFallback) {
                     const fallbackPrompt = getFallbackPrompt(gameData.currentType, gameData.intimacy);
                     displayPrompt(fallbackPrompt);
+                } else {
+                    generateAndShowPrompt();
                 }
             } catch (fallbackError) {
                 console.error('Fallback also failed:', fallbackError);

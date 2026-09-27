@@ -1,3 +1,5 @@
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+
 export default async function handler(req, res) {
   // הגדר CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,7 +32,7 @@ export default async function handler(req, res) {
     }
 
     // בניית URL ל-Gemini API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
     
     // הכנת הפרומפט המלא עם הקשר המשחק
     const fullPrompt = buildContextualPrompt(prompt, gameContext);
@@ -47,6 +49,8 @@ export default async function handler(req, res) {
         topK: 40,
         topP: 0.95,
         maxOutputTokens: 200,
+        // 2.5 models "think" by default and that counts against maxOutputTokens
+        thinkingConfig: { thinkingBudget: 0 },
       },
       safetySettings: [
         {
@@ -73,6 +77,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-goog-api-key': process.env.GEMINI_API_KEY,
       },
       body: JSON.stringify(requestBody)
     });
@@ -131,7 +136,7 @@ export default async function handler(req, res) {
     res.status(200).json({ 
       response: cleanedText,
       metadata: {
-        model: 'gemini-pro',
+        model: GEMINI_MODEL,
         timestamp: new Date().toISOString(),
         promptLength: fullPrompt.length,
         responseLength: cleanedText.length
